@@ -25,43 +25,42 @@ public class Application {
       final var source = service.interfaces();
       LOG.info("Source: {}", source.name());
       try (final var pcap = service.live(source, new DefaultLiveOptions())) {
-        int datalink = pcap.datalink();
-        if (datalink == Ethernet.TYPE) {
-          var buffer = pcap.allocate(PacketBuffer.class);
-          var header = pcap.allocate(PacketHeader.class);
-          for (int i = 0; i < 10; i++) {
+        if (pcap.datalink() == Ethernet.TYPE) {
+          final var buffer = pcap.allocate(PacketBuffer.class);
+          final var header = pcap.allocate(PacketHeader.class);
+          for (var i = 0; i < 10; i++) {
             try {
               pcap.nextEx(header, buffer);
-              var ethernet = buffer.cast(Ethernet.class);
+              final var ethernet = buffer.cast(Ethernet.class);
               LOG.info("Header: {}", header);
               LOG.info("Buffer: {}", buffer);
               LOG.info("Packets");
               LOG.info(ethernet);
               switch (ethernet.type()) {
                 case Ip4.TYPE -> {
-                  Ip4 ip4 = buffer.readerIndex(ethernet.size()).cast(Ip4.class);
+                  final var ip4 = buffer.readerIndex(ethernet.size()).cast(Ip4.class);
                   LOG.info(ip4);
                   switch (ip4.protocol()) {
                     case Tcp.TYPE -> {
-                      var tcp = buffer.readerIndex(ethernet.size() + ip4.size()).cast(Tcp.class);
+                      final var tcp = buffer.readerIndex(ethernet.size() + ip4.size()).cast(Tcp.class);
                       LOG.info(tcp);
                     }
                     case Udp.TYPE -> {
-                      var udp = buffer.readerIndex(ethernet.size() + ip4.size()).cast(Udp.class);
+                      final var udp = buffer.readerIndex(ethernet.size() + ip4.size()).cast(Udp.class);
                       LOG.info(udp);
                     }
                   }
                 }
                 case Ip6.TYPE -> {
-                  Ip6 ip6 = buffer.readerIndex(ethernet.size()).cast(Ip6.class);
+                  final var ip6 = buffer.readerIndex(ethernet.size()).cast(Ip6.class);
                   LOG.info(ip6);
                   switch (ip6.nextHeader()) {
                     case Tcp.TYPE -> {
-                      var tcp = buffer.readerIndex(ethernet.size() + ip6.size()).cast(Tcp.class);
+                      final var tcp = buffer.readerIndex(ethernet.size() + ip6.size()).cast(Tcp.class);
                       LOG.info(tcp);
                     }
                     case Udp.TYPE -> {
-                      var udp = buffer.readerIndex(ethernet.size() + ip6.size()).cast(Udp.class);
+                      final var udp = buffer.readerIndex(ethernet.size() + ip6.size()).cast(Udp.class);
                       LOG.info(udp);
                     }
                   }
