@@ -79,7 +79,7 @@
             <dependency>
                 <groupId>com.ardikars.pcap</groupId>
                 <artifactId>pcap</artifactId>
-                <version>1.4.1</version>
+                <version>1.4.2</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
