@@ -26,11 +26,12 @@ public class Application {
       LOG.info("Source: {}", source.name());
       try (final var pcap = service.live(source, new DefaultLiveOptions())) {
         if (pcap.datalink() == Ethernet.TYPE) {
-          final var buffer = pcap.allocate(PacketBuffer.class);
+          final var packet = pcap.allocate(PacketBuffer.class);
           final var header = pcap.allocate(PacketHeader.class);
           for (var i = 0; i < 10; i++) {
             try {
-              pcap.nextEx(header, buffer);
+              pcap.nextEx(header, packet);
+              var buffer = packet.copy();
               final var ethernet = buffer.cast(Ethernet.class);
               LOG.info("Header: {}", header);
               LOG.info("Buffer: {}", buffer);
@@ -66,6 +67,7 @@ public class Application {
                   }
                 }
               }
+              buffer.release(); // free the buffer
             } catch (BreakException | TimeoutException e) {
               LOG.error(e);
             }
