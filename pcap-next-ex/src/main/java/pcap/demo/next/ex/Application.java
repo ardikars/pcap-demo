@@ -31,6 +31,8 @@ public class Application {
           for (var i = 0; i < 10; i++) {
             try {
               pcap.nextEx(header, packet);
+              // Only if needed, and don't forget to free the copied buffer after no longer in use
+              // https://github.com/ardikars/pcap/issues/327
               var buffer = packet.copy();
               buffer.setIndex(0, header.captureLength());
               final var ethernet = buffer.cast(Ethernet.class);
