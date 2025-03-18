@@ -32,6 +32,7 @@ public class Application {
             try {
               pcap.nextEx(header, packet);
               var buffer = packet.copy();
+              buffer.setIndex(0, header.captureLength());
               final var ethernet = buffer.cast(Ethernet.class);
               LOG.info("Header: {}", header);
               LOG.info("Buffer: {}", buffer);
