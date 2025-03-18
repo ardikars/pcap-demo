@@ -34,7 +34,7 @@ public class Application {
               // Only if needed, and don't forget to free the copied buffer after no longer in use
               // https://github.com/ardikars/pcap/issues/327
               var buffer = packet.copy();
-              buffer.setIndex(0, header.captureLength());
+              buffer.setIndex(packet.readerIndex(), packet.writerIndex());
               final var ethernet = buffer.cast(Ethernet.class);
               LOG.info("Header: {}", header);
               LOG.info("Buffer: {}", buffer);
